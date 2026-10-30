@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Account | Smart CMS</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--light-blue-bg); padding: 2rem 1rem;">
+
+  <div class="content-card" style="width: 100%; max-width: 650px; padding: 2.5rem; box-shadow: var(--shadow-floating);">
+    <div style="text-align: center; margin-bottom: 1.75rem;">
+      <a href="index.html" class="brand-title" style="justify-content: center; margin-bottom: 0.5rem;">
+        <span class="brand-badge">CMS</span>
+        <span style="color: var(--navy-primary);">Smart CMS</span>
+      </a>
+      <h3 style="color: var(--navy-primary);">Create Institutional Account</h3>
+      <p style="color: var(--text-muted); font-size: 0.875rem;">Verify campus affiliation to access grievance services</p>
+    </div>
+
+    <!-- Role Tabs -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1.5rem;">
+      <button type="button" class="btn btn-outline active" id="tab-role-student" onclick="setSignupRole('student')">Student Account</button>
+      <button type="button" class="btn btn-outline" id="tab-role-admin" onclick="setSignupRole('admin')">Teacher / Admin</button>
+    </div>
+
+    <div id="signup-alert" style="display: none; padding: 0.75rem; border-radius: 6px; margin-bottom: 1rem; font-size: 0.85rem;"></div>
+
+    <form onsubmit="handleSignupSubmit(event)">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div class="form-group">
+          <label class="form-label">Full Name *</label>
+          <input type="text" id="reg-name" class="form-control" placeholder="AM" value="AM" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Campus Email *</label>
+          <input type="email" id="reg-email" class="form-control" placeholder="am@college.edu" required>
+        </div>
+      </div>
+
+      <!-- STUDENT DETAILS -->
+      <div id="student-fields">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-group">
+            <label class="form-label">Branch / Department *</label>
+            <select id="reg-dept" class="form-control">
+              <option value="Computer Science & IT">Computer Science & IT</option>
+              <option value="Electrical Engineering">Electrical Engineering</option>
+              <option value="Mechanical Engineering">Mechanical Engineering</option>
+              <option value="Civil Engineering">Civil Engineering</option>
+              <option value="Electronics & Comm.">Electronics & Communication</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Roll Number *</label>
+            <input type="text" id="reg-roll" class="form-control" placeholder="e.g. 2023-CS-041">
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-group">
+            <label class="form-label">Academic Year *</label>
+            <select id="reg-year" class="form-control">
+              <option value="1st Year">1st Year</option>
+              <option value="2nd Year">2nd Year</option>
+              <option value="3rd Year">3rd Year</option>
+              <option value="4th Year">4th Year</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Section *</label>
+            <select id="reg-section" class="form-control">
+              <option value="Genius">Genius</option>
+              <option value="Brilliant">Brilliant</option>
+              <option value="Smart">Smart</option>
+              <option value="Expert">Expert</option>
+              <option value="Scholar">Scholar</option>
+              <option value="Bright">Bright</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- TEACHER / ADMIN DETAILS -->
+      <div id="admin-fields" style="display: none;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-group">
+            <label class="form-label">Admin ID / Employee ID *</label>
+            <input type="text" id="reg-admin-id" class="form-control" placeholder="e.g. EMP-IT-8842">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Administrative Department *</label>
+            <select id="reg-admin-dept" class="form-control">
+              <option value="Estate & Maintenance">Estate & Maintenance Office</option>
+              <option value="Library Management">Library Management</option>
+              <option value="Canteen Committee">Canteen & Mess Committee</option>
+              <option value="IT Services Support">IT & Network Services</option>
+              <option value="Proctorial Board">Proctorial Board (Anti-Ragging)</option>
+              <option value="Dean Academic Affairs">Dean Academic Affairs</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div class="form-group">
+          <label class="form-label">Password *</label>
+          <input type="password" id="reg-pass" class="form-control" placeholder="Min. 6 chars" minlength="6" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Confirm Password *</label>
+          <input type="password" id="reg-confirm-pass" class="form-control" placeholder="Re-enter password" minlength="6" required>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-dark" style="width: 100%;">Complete Registration</button>
+      
+      <p style="text-align: center; margin-top: 1.25rem; font-size: 0.875rem;">
+        Already registered? <a href="login.html">Sign In</a>
+      </p>
+    </form>
+  </div>
+
+  <script src="js/common.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>

@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enterprise Console | Smart CMS</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* Styling for repeated cluster badge */
+    .repentance-pill {
+      background: #FEE2E2;
+      color: #991B1B;
+      border: 1px solid #EF4444;
+      padding: 3px 9px;
+      border-radius: 50px;
+      font-size: 0.775rem;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      box-shadow: 0 1px 3px rgba(239, 68, 68, 0.2);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="dashboard-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="index.html" class="brand-title">
+          <span class="brand-badge">CMS</span>
+          <span>Smart CMS</span>
+        </a>
+      </div>
+
+      <ul class="sidebar-menu">
+        <li><a class="active" onclick="switchDashboardTab('overview')">📊 Overview</a></li>
+        <li class="student-only"><a onclick="switchDashboardTab('submit-complaint')">✍️ Register Complaint</a></li>
+        <li class="student-only"><a onclick="switchDashboardTab('my-complaints')">📋 My Complaints</a></li>
+        <li><a onclick="switchDashboardTab('track-ticket')">🔍 Live Complaint Tracker</a></li>
+        <li class="admin-only" style="display: none;"><a onclick="switchDashboardTab('manage-complaints')">📑 Manage Complaints</a></li>
+        <li class="admin-only" style="display: none;"><a onclick="switchDashboardTab('view-feedbacks')">💬 Student Feedbacks</a></li>
+        <li class="admin-only" style="display: none;"><a onclick="switchDashboardTab('post-notice')">📢 Broadcast Notice</a></li>
+        <li class="student-only"><a onclick="switchDashboardTab('feedback')">💬 Feedback</a></li>
+        <li><a onclick="switchDashboardTab('profile')">👤 My Profile</a></li>
+      </ul>
+
+      <div style="padding: 1.25rem; border-top: 1px solid rgba(255,255,255,0.08);">
+        <button class="btn btn-outline btn-sm" onclick="handleLogout()" style="width: 100%; color: white; background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.1);">
+          Sign Out
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Workspace -->
+    <div class="main-workspace">
+      <header class="topbar-header">
+        <h3 id="portal-view-title" style="color: var(--navy-primary); font-size: 1.25rem;">Dashboard Overview</h3>
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div style="text-align: right;">
+            <div id="nav-user-name" style="font-weight: 700; font-size: 0.925rem;">AM</div>
+            <small id="nav-user-dept" style="color: var(--text-muted);">Department</small>
+          </div>
+          <span class="badge badge-progress" id="nav-user-role">Student</span>
+        </div>
+      </header>
+
+      <main class="content-body">
+        <div id="dashboard-global-alert" style="display: none; padding: 0.85rem; border-radius: 6px; margin-bottom: 1.5rem;"></div>
+
+        <!-- 1. OVERVIEW -->
+        <section id="tab-overview" class="tab-pane active">
+          <div id="notice-broadcast-container"></div>
+
+          <div class="content-card" style="background: var(--navy-primary); color: white; margin-bottom: 1.5rem;">
+            <h2 style="color: white; margin-bottom: 0.5rem;" id="welcome-title">Welcome to Smart CMS</h2>
+            <p style="color: #94A3B8; max-width: 700px;">
+              Enterprise campus grievance redressal with automated repeated issue clustering, 24-hour SLA monitors, and verified resolution timelines.
+            </p>
+            <div style="margin-top: 1.25rem;" class="student-only">
+              <button class="btn btn-primary" onclick="switchDashboardTab('submit-complaint')">+ Register New Complaint</button>
+            </div>
+          </div>
+
+          <div class="content-card">
+            <div class="content-card-header">
+              <h4 style="color: var(--navy-primary);">Recent Active Complaints Stream</h4>
+            </div>
+            <div class="table-responsive">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Ticket ID</th>
+                    <th>Zone</th>
+                    <th>Issue Title</th>
+                    <th>Location</th>
+                    <th>Repeated Issues Cluster</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="overview-recent-tbody">
+                  <tr><td colspan="7" style="text-align: center;">Loading complaints...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 2. REGISTER COMPLAINT -->
+        <section id="tab-submit-complaint" class="tab-pane student-only">
+          <div class="content-card" style="max-width: 850px; margin: 0 auto;">
+            <div class="content-card-header">
+              <h4 style="color: var(--navy-primary);">Register Complaint</h4>
+            </div>
+            <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
+              Select the campus zone where the problem exists:
+            </p>
+
+            <!-- Zone Selector Cards -->
+            <div class="zone-grid-cards">
+              <div class="zone-selector-card active" onclick="selectCampusZone('Classroom', this)">
+                <div class="zone-icon">🏫</div>
+                <div class="zone-label">Classroom</div>
+              </div>
+              <div class="zone-selector-card" onclick="selectCampusZone('Library', this)">
+                <div class="zone-icon">📚</div>
+                <div class="zone-label">Library</div>
+              </div>
+              <div class="zone-selector-card" onclick="selectCampusZone('Canteen / Mess', this)">
+                <div class="zone-icon">🍔</div>
+                <div class="zone-label">Canteen</div>
+              </div>
+              <div class="zone-selector-card" onclick="selectCampusZone('Labs / Workstation', this)">
+                <div class="zone-icon">🔬</div>
+                <div class="zone-label">Labs</div>
+              </div>
+              <div class="zone-selector-card" onclick="selectCampusZone('Hostel', this)">
+                <div class="zone-icon">🛏️</div>
+                <div class="zone-label">Hostel</div>
+              </div>
+              <div class="zone-selector-card" onclick="selectCampusZone('Anti-Ragging', this)">
+                <div class="zone-icon">🛡️</div>
+                <div class="zone-label">Anti-Ragging</div>
+              </div>
+            </div>
+
+            <!-- Duplicate Match Box -->
+            <div id="duplicate-match-box" class="duplicate-alert-box">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <strong style="color: #B45309;">⚠️ Similar Active Ticket Already Exists!</strong>
+                <span class="badge badge-pending">Cluster Match</span>
+              </div>
+              <p style="color: #78350F; font-size: 0.85rem; margin: 6px 0;" id="dup-issue-desc"></p>
+              <div style="display: flex; gap: 8px; margin-top: 8px;">
+                <button type="button" class="btn btn-dark btn-sm" id="btn-upvote-dup" onclick="upvoteExistingTicket()">
+                  👍 Yes, I Have This Issue Too (+1 Upvote)
+                </button>
+                <button type="button" class="btn btn-outline btn-sm" onclick="dismissDuplicateBox()">
+                  Continue Creating New Ticket
+                </button>
+              </div>
+            </div>
+
+            <form id="form-complaint" onsubmit="handleComplaintSubmit(event)">
+              <div class="form-group">
+                <label class="form-label">Sub-Category *</label>
+                <select id="comp-subcategory" class="form-control" required></select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Complaint Title / Summary *</label>
+                <input type="text" id="comp-title" class="form-control" placeholder="e.g. AC cooling issue in Room 302 or Projector dead" oninput="checkDuplicateIssueDebounced()" required>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                  <label class="form-label">Exact Room / Spot Location *</label>
+                  <input type="text" id="comp-location" class="form-control" placeholder="e.g. Academic Block 2, Room 302" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Urgency Priority *</label>
+                  <select id="comp-priority" class="form-control">
+                    <option value="Normal">Normal (72-hr SLA)</option>
+                    <option value="High">High (24-hr SLA)</option>
+                    <option value="Urgent">Urgent (12-hr Immediate Action)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Detailed Description *</label>
+                <textarea id="comp-desc" class="form-control" rows="4" placeholder="Explain the exact trouble and when it began..." required></textarea>
+              </div>
+
+              <button type="submit" class="btn btn-dark" style="width: 100%;">
+                Submit Complaint Ticket
+              </button>
+            </form>
+          </div>
+        </section>
+
+        <!-- 3. MY COMPLAINTS -->
+        <section id="tab-my-complaints" class="tab-pane student-only">
+          <div class="content-card">
+            <div class="content-card-header">
+              <h4 style="color: var(--navy-primary);">My Complaints</h4>
+            </div>
+            <div class="table-responsive">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Ticket ID</th>
+                    <th>Zone</th>
+                    <th>Title</th>
+                    <th>Location</th>
+                    <th>Repetitions Count</th>
+                    <th>Status</th>
+                    <th>Track Live</th>
+                  </tr>
+                </thead>
+                <tbody id="student-complaints-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 4. LIVE COMPLAINT TRACKER -->
+        <section id="tab-track-ticket" class="tab-pane">
+          <div class="content-card" style="max-width: 800px; margin: 0 auto;">
+            <div class="content-card-header">
+              <h4 style="color: var(--navy-primary);">Live Complaint Tracker</h4>
+            </div>
+            <p style="color: var(--text-muted);">Enter any Ticket Reference ID to see its 4-step progress and department remarks.</p>
+
+            <div style="display: flex; gap: 10px; margin: 1.5rem 0;">
+              <input type="text" id="track-ticket-input" class="form-control" placeholder="e.g. CMS-202503-CLAS-4912">
+              <button class="btn btn-dark" onclick="lookupTicketStatus()">Track Status</button>
+            </div>
+
+            <div id="ticket-result-box" style="display: none; border-top: 1px solid var(--border-subtle); padding-top: 1.5rem;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                  <h3 id="tr-title" style="color: var(--navy-primary);">Title</h3>
+                  <small id="tr-ticket-id" style="color: var(--text-muted); font-weight: 700;">CMS-0000</small>
+                </div>
+                <div id="tr-badge-wrap"></div>
+              </div>
+
+              <div class="tracking-stepper">
+                <div class="step-node completed" id="step-node-1">
+                  <div class="step-indicator-circle">1</div>
+                  <div class="step-label">Submitted</div>
+                </div>
+                <div class="step-node" id="step-node-2">
+                  <div class="step-indicator-circle">2</div>
+                  <div class="step-label">Under Review</div>
+                </div>
+                <div class="step-node" id="step-node-3">
+                  <div class="step-indicator-circle">3</div>
+                  <div class="step-label">In Progress</div>
+                </div>
+                <div class="step-node" id="step-node-4">
+                  <div class="step-indicator-circle">4</div>
+                  <div class="step-label">Resolved</div>
+                </div>
+              </div>
+
+              <div style="background: #F8FAFC; border: 1px solid var(--border-subtle); padding: 1.25rem; border-radius: var(--radius-sm); margin-top: 1rem;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                  <strong>Official Administrative Remarks:</strong>
+                  <span id="tr-upvotes-count" class="repentance-pill">🔥 Repeated: 1 Time</span>
+                </div>
+                <p id="tr-remarks" style="color: #334155;">No updates.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 5. ADMIN MANAGE COMPLAINTS (GROUPED REPETITIONS) -->
+        <section id="tab-manage-complaints" class="tab-pane admin-only">
+          <div class="content-card">
+            <div class="content-card-header">
+              <h4 style="color: var(--navy-primary);">Manage Complaints (Grouped by Repetitions)</h4>
+            </div>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">
+              Complaints are clustered together. Higher repetition count indicates major campus problem.
+            </p>
+            <div class="table-responsive">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Ticket Cluster</th>
+                    <th>Student Info</th>
+                    <th>Zone & Location</th>
+                    <th>Issue Title</th>
+                    <th>Number of Repetitions</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-complaints-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 6. ADMIN VIEW STUDENT FEEDBACKS -->
+        <section id="tab-view-feedbacks" class="tab-pane admin-only">
+          <div class="content-card">
+            <div class="content-card-header">
+              <h4 style="color: var(--navy-primary);">Student Feedback & Experience Audit</h4>
+            </div>
+            <div class="table-responsive">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Student Name & Roll</th>
+                    <th>Zone</th>
+                    <th>Rating</th>
+                    <th>Comments / Feedback</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-feedbacks-tbody">
+                  <tr><td colspan="5" style="text-align: center;">Loading feedbacks...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 7. BROADCAST NOTICE -->
+        <section id="tab-post-notice" class="tab-pane admin-only">
+          <div class="content-card" style="max-width: 650px; margin: 0 auto;">
+            <div class="content-card-header">
+              <h4 style="color: var(--navy-primary);">Broadcast Campus Notice (24h Auto-Expiry)</h4>
+            </div>
+            <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
+              Notices broadcasted here appear at the top of all student dashboards and automatically expire after 24 hours.
+            </p>
+
+            <form onsubmit="handleNoticeSubmit(event)">
+              <div class="form-group">
+                <label class="form-label">Notice Title *</label>
+                <input type="text" id="notice-title" class="form-control" placeholder="e.g. Canteen drinking water cooler maintenance today 10 AM - 2 PM" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Detailed Notice Content *</label>
+                <textarea id="notice-content" class="form-control" rows="4" placeholder="Briefly specify affected blocks and expected resumption..." required></textarea>
+              </div>
+              <button type="submit" class="btn btn-dark" style="width: 100%;">Push Live Broadcast (24 Hours)</button>
+            </form>
+          </div>
+        </section>
+
+        <!-- 8. FEEDBACK (STUDENT SUBMISSION) -->
+        <section id="tab-feedback" class="tab-pane student-only">
+          <div class="content-card" style="max-width: 600px; margin: 0 auto;">
+            <div class="content-card-header">
+              <h4 style="color: var(--navy-primary);">Campus Redressal Feedback</h4>
+            </div>
+            <form onsubmit="handleFeedbackSubmit(event)">
+              <div class="form-group">
+                <label class="form-label">Campus Zone</label>
+                <select id="fb-zone" class="form-control">
+                  <option value="Classroom">Classroom & Academic</option>
+                  <option value="Library">Central Library</option>
+                  <option value="Canteen / Mess">Canteen & Mess</option>
+                  <option value="Labs">Computer / Science Labs</option>
+                  <option value="Hostel">Hostels</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Overall Satisfaction</label>
+                <select id="fb-rating" class="form-control">
+                  <option value="5">⭐⭐⭐⭐⭐ (5 - Very Satisfied)</option>
+                  <option value="4">⭐⭐⭐⭐ (4 - Satisfied)</option>
+                  <option value="3">⭐⭐⭐ (3 - Neutral)</option>
+                  <option value="2">⭐⭐ (2 - Unsatisfactory)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Comments</label>
+                <textarea id="fb-comments" class="form-control" rows="3" placeholder="Share your experience..." required></textarea>
+              </div>
+              <button type="submit" class="btn btn-dark" style="width: 100%;">Submit Feedback</button>
+            </form>
+          </div>
+        </section>
+
+        <!-- 9. PROFILE -->
+        <section id="tab-profile" class="tab-pane">
+          <div class="content-card" style="max-width: 700px; margin: 0 auto;">
+            <div class="content-card-header">
+              <h4 style="color: var(--navy-primary);">My Profile & Academic Details</h4>
+            </div>
+            <form onsubmit="handleProfileUpdate(event)">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                  <label class="form-label">Full Name</label>
+                  <input type="text" id="prof-name" class="form-control" value="AM" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Campus Email</label>
+                  <input type="email" id="prof-email" class="form-control" readonly style="background: #F8FAFC;">
+                </div>
+              </div>
+
+              <!-- STUDENT SPECIFIC PROFILE DETAILS -->
+              <div id="prof-student-details">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                  <div class="form-group">
+                    <label class="form-label">Branch / Department</label>
+                    <input type="text" id="prof-dept" class="form-control" readonly style="background: #F8FAFC;">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Roll Number</label>
+                    <input type="text" id="prof-roll" class="form-control" readonly style="background: #F8FAFC;">
+                  </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                  <div class="form-group">
+                    <label class="form-label">Academic Year</label>
+                    <select id="prof-year" class="form-control">
+                      <option value="1st Year">1st Year</option>
+                      <option value="2nd Year">2nd Year</option>
+                      <option value="3rd Year">3rd Year</option>
+                      <option value="4th Year">4th Year</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Section</label>
+                    <select id="prof-section" class="form-control">
+                      <option value="Genius">Genius</option>
+                      <option value="Brilliant">Brilliant</option>
+                      <option value="Smart">Smart</option>
+                      <option value="Expert">Expert</option>
+                      <option value="Scholar">Scholar</option>
+                      <option value="Bright">Bright</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <!-- TEACHER / ADMIN SPECIFIC PROFILE DETAILS -->
+              <div id="prof-admin-details" style="display: none;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                  <div class="form-group">
+                    <label class="form-label">Admin ID / Employee ID</label>
+                    <input type="text" id="prof-admin-id" class="form-control" readonly style="background: #F8FAFC;">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Administrative Unit</label>
+                    <input type="text" id="prof-admin-unit" class="form-control" readonly style="background: #F8FAFC;">
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Phone Number (Optional)</label>
+                <input type="text" id="prof-phone" class="form-control" placeholder="+91 98765 43210">
+              </div>
+
+              <button type="submit" class="btn btn-dark">Update Profile Information</button>
+            </form>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <script src="js/common.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>

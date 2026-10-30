@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In | Smart CMS</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--light-blue-bg);">
+
+  <div class="content-card" style="width: 100%; max-width: 440px; padding: 2.5rem; box-shadow: var(--shadow-floating);">
+    <div style="text-align: center; margin-bottom: 2rem;">
+      <a href="index.html" class="brand-title" style="justify-content: center; margin-bottom: 0.5rem;">
+        <span class="brand-badge">CMS</span>
+        <span style="color: var(--navy-primary);">Smart CMS</span>
+      </a>
+      <h3 style="color: var(--navy-primary); font-size: 1.5rem;">Portal Sign In</h3>
+      <p style="color: var(--text-muted); font-size: 0.875rem;">Access student grievances or administrative triage</p>
+    </div>
+
+    <div id="login-alert" style="display: none; padding: 0.75rem; border-radius: 6px; margin-bottom: 1rem; font-size: 0.85rem;"></div>
+
+    <form onsubmit="handleLoginSubmit(event)">
+      <div class="form-group">
+        <label class="form-label">Campus Email Address</label>
+        <input type="email" id="login-email" class="form-control" placeholder="am@college.edu" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input type="password" id="login-password" class="form-control" placeholder="••••••••" required>
+      </div>
+
+      <button type="submit" class="btn btn-dark" id="btn-login-submit" style="width: 100%; margin-top: 0.5rem;">
+        Authorize & Sign In
+      </button>
+
+      <p style="text-align: center; margin-top: 1.5rem; font-size: 0.875rem;">
+        New student or faculty? <a href="signup.html">Create an Account</a>
+      </p>
+
+      <div style="text-align: center; margin-top: 1rem;">
+        <a href="index.html" style="font-size: 0.85rem; color: var(--text-muted);">&larr; Return to Homepage</a>
+      </div>
+    </form>
+  </div>
+
+  <script src="js/common.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>
